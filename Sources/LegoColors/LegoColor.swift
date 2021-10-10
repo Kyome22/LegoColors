@@ -15,6 +15,8 @@ import UIKit
 import AppKit
 #endif
 
+private let alphaThreshold: CGFloat = 0.9
+
 public struct LegoColor: Equatable {
     public let name: String
     public let color: Color
@@ -140,7 +142,7 @@ public extension LegoColor {
         
         uiColor.getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        if a < 0.5 {
+        if a < alphaThreshold {
             self = LegoColor.transClear
         } else {
             self = LegoColor.getApproximateColor(r: r, g: g, b: b)
@@ -158,7 +160,7 @@ public extension LegoColor {
         let b = sRGBColor.blueComponent
         let a = sRGBColor.alphaComponent
     
-        if a < 0.5 {
+        if a < alphaThreshold {
             self = LegoColor.transClear
         } else {
             self = LegoColor.getApproximateColor(r: r, g: g, b: b)
@@ -167,7 +169,7 @@ public extension LegoColor {
     #endif
     
     init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat = 1) {
-        if a < 0.5 {
+        if a < alphaThreshold {
             self = LegoColor.transClear
         } else {
             self = LegoColor.getApproximateColor(r: r, g: g, b: b)
@@ -176,7 +178,7 @@ public extension LegoColor {
     
     init(color: Color) {
         let (r, g, b, a) = color.components
-        if a < 0.5 {
+        if a < alphaThreshold {
             self = LegoColor.transClear
         } else {
             self = LegoColor.getApproximateColor(r: r, g: g, b: b)
