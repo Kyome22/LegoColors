@@ -18,14 +18,20 @@ final class LegoColorsTests: XCTestCase {
         XCTAssertEqual(0.56, actualB)
     }
     
-    func testLegoColorInitialize() {
+    func testLegoColorInit() {
+        let c = Color(red: 0.949, green: 0.717, blue: 0.254)
+        let actual = LegoColor(color: c)
+        XCTAssertEqual(LegoColor.brightLightOrange, actual)
+    }
+    
+    func testLegoColorInitOnNative() {
         #if canImport(UIKit)
         let uc = UIColor(red: 0.949, green: 0.717, blue: 0.254, alpha: 1.0)
-        let actual = LegoColor(color: uc)
+        let actual = LegoColor(uiColor: uc)
         XCTAssertEqual(LegoColor.brightLightOrange, actual)
         #elseif canImport(AppKit)
         let nc = NSColor(red: 0.949, green: 0.717, blue: 0.254, alpha: 1.0)
-        let actual = LegoColor(color: nc)
+        let actual = LegoColor(nsColor: nc)
         XCTAssertEqual(LegoColor.brightLightOrange, actual)
         #endif
     }

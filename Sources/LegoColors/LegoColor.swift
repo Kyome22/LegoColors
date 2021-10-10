@@ -124,37 +124,37 @@ public extension LegoColor {
     
     #if os(iOS)
     // return an approximate color from UIColor
-    init(color: UIColor) {
+    init(uiColor: UIColor) {
         // Default color space of UIColor is sRGB.
         var r: CGFloat = 0
         var g: CGFloat = 0
         var b: CGFloat = 0
         var a: CGFloat = 0
         
-        color.getRed(&r, green: &g, blue: &b, alpha: &a)
-    
-        var n: Int = 0
-        var diff = SolidColors[n].diff(red: r, green: g, blue: b)
-        for i in (1 ..< SolidColors.count) {
-            let d = SolidColors[i].diff(red: r, green: g, blue: b)
-            if d < diff {
-                diff = d
-                n = i
-            }
-        }
-        self = SolidColors[n]
+        uiColor.getRed(&r, green: &g, blue: &b, alpha: &a)
+        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
     }
     #endif
     
     #if os(macOS)
     // return an approximate color from NSColor
-    init?(color: NSColor) {
-        guard let sRGBColor = color.usingColorSpace(.sRGB) else { return nil }
+    init?(nsColor: NSColor) {
+        guard let sRGBColor = nsColor.usingColorSpace(.sRGB) else { return nil }
 
         let r = sRGBColor.redComponent
         let g = sRGBColor.greenComponent
         let b = sRGBColor.blueComponent
     
+        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+    }
+    #endif
+    
+    init(color: Color) {
+        let (r, g, b) = color.components
+        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+    }
+    
+    static func getApproximateColor(r: CGFloat, g: CGFloat, b: CGFloat) -> LegoColor {
         var n: Int = 0
         var diff = SolidColors[n].diff(red: r, green: g, blue: b)
         for i in (1 ..< SolidColors.count) {
@@ -164,7 +164,6 @@ public extension LegoColor {
                 n = i
             }
         }
-        self = SolidColors[n]
+        return SolidColors[n]
     }
-    #endif
 }
