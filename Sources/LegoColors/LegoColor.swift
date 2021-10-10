@@ -149,6 +149,10 @@ public extension LegoColor {
     }
     #endif
     
+    init(r: CGFloat, g: CGFloat, b: CGFloat) {
+        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+    }
+    
     init(color: Color) {
         let (r, g, b) = color.components
         self = LegoColor.getApproximateColor(r: r, g: g, b: b)
