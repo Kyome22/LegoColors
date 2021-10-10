@@ -14,7 +14,7 @@ import AppKit
 #endif
 
 extension Color {
-    var components: (r: CGFloat, g: CGFloat, b: CGFloat) {
+    var components: (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {
         #if canImport(UIKit)
         let c = UIColor(self)
         var r: CGFloat = .zero
@@ -22,12 +22,12 @@ extension Color {
         var b: CGFloat = .zero
         var a: CGFloat = .zero
         c.getRed(&r, green: &g, blue: &b, alpha: &a)
-        return (r, g, b)
+        return (r, g, b, a)
         #elseif canImport(AppKit)
         guard let c = NSColor(self).usingColorSpace(.sRGB) else {
-            return (0, 0, 0)
+            return (0, 0, 0, 0)
         }
-        return (c.redComponent, c.greenComponent, c.blueComponent)
+        return (c.redComponent, c.greenComponent, c.blueComponent, c.alphaComponent)
         #endif
     }
 }

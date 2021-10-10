@@ -9,7 +9,7 @@ import SwiftUI
 final class LegoColorsTests: XCTestCase {
     
     func testColorComponents() {
-        let (r, g, b) = Color(red: 0.12, green: 0.34, blue: 0.56).components
+        let (r, g, b, _) = Color(red: 0.12, green: 0.34, blue: 0.56).components
         let actualR = (100 * r).rounded() / 100
         let actualG = (100 * g).rounded() / 100
         let actualB = (100 * b).rounded() / 100

@@ -20,14 +20,14 @@ public struct LegoColor: Equatable {
     public let color: Color
     public let bricklinkID: Int
     
-    init(id: Int, red: Double, green: Double, blue: Double, name: String) {
+    init(id: Int, red: Double, green: Double, blue: Double, opacity: Double = 1, name: String) {
         self.name = name
-        self.color = Color(red: red, green: green, blue: blue)
+        self.color = Color(red: red, green: green, blue: blue, opacity: opacity)
         self.bricklinkID = id
     }
     
     func diff(red: CGFloat, green: CGFloat, blue: CGFloat) -> CGFloat {
-        let (r, g, b) = color.components
+        let (r, g, b, _) = color.components
         return abs(r - red) + abs(g - green) + abs(b - blue)
     }
     
@@ -122,6 +122,13 @@ public extension LegoColor {
     static let pink =                SolidColors[82]
     static let lightPink =           SolidColors[83]
     
+    static let transClear = LegoColor(id: 12,
+                                      red: 0.932,
+                                      green: 0.932,
+                                      blue: 0.932,
+                                      opacity: 0.3,
+                                      name: "transClear")
+    
     #if os(iOS)
     // return an approximate color from UIColor
     init(uiColor: UIColor) {
@@ -132,7 +139,12 @@ public extension LegoColor {
         var a: CGFloat = 0
         
         uiColor.getRed(&r, green: &g, blue: &b, alpha: &a)
-        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+        
+        if a < 0.5 {
+            self = LegoColor.transClear
+        } else {
+            self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+        }
     }
     #endif
     
@@ -144,18 +156,31 @@ public extension LegoColor {
         let r = sRGBColor.redComponent
         let g = sRGBColor.greenComponent
         let b = sRGBColor.blueComponent
+        let a = sRGBColor.alphaComponent
     
-        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+        if a < 0.5 {
+            self = LegoColor.transClear
+        } else {
+            self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+        }
     }
     #endif
     
-    init(r: CGFloat, g: CGFloat, b: CGFloat) {
-        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+    init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat = 1) {
+        if a < 0.5 {
+            self = LegoColor.transClear
+        } else {
+            self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+        }
     }
     
     init(color: Color) {
-        let (r, g, b) = color.components
-        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+        let (r, g, b, a) = color.components
+        if a < 0.5 {
+            self = LegoColor.transClear
+        } else {
+            self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+        }
     }
     
     static func getApproximateColor(r: CGFloat, g: CGFloat, b: CGFloat) -> LegoColor {
