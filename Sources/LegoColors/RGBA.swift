@@ -7,9 +7,9 @@
 
 import CoreGraphics
 
-struct RGBA {
-    let r: CGFloat
-    let g: CGFloat
-    let b: CGFloat
-    let a: CGFloat
+public struct RGBA {
+    public let r: CGFloat
+    public let g: CGFloat
+    public let b: CGFloat
+    public let a: CGFloat
 }

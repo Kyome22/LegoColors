@@ -7,7 +7,7 @@
 
 import CoreGraphics
 
-extension CGColor {
+public extension CGColor {
     var rgba: RGBA? {
         guard let sRGB = CGColorSpace(name: CGColorSpace.sRGB),
               let c = self.converted(to: sRGB, intent: .defaultIntent, options: nil),
