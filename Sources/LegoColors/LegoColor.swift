@@ -29,8 +29,14 @@ public struct LegoColor: Equatable {
     }
     
     func diff(red: CGFloat, green: CGFloat, blue: CGFloat) -> CGFloat {
-        let (r, g, b, _) = color.components
-        return abs(r - red) + abs(g - green) + abs(b - blue)
+        guard let rgba = self.color.components else {
+            fatalError("Impossible")
+        }
+        return abs(rgba.r - red) + abs(rgba.g - green) + abs(rgba.b - blue)
+    }
+    
+    public var cgColor: CGColor {
+        return self.color.cgColor ?? CGColor(gray: 0, alpha: 0)
     }
     
     public static func == (lhs: LegoColor, rhs: LegoColor) -> Bool {
@@ -131,60 +137,41 @@ public extension LegoColor {
                                       opacity: 0.3,
                                       name: "transClear")
     
-    #if os(iOS)
-    // return an approximate color from UIColor
-    init(uiColor: UIColor) {
-        // Default color space of UIColor is sRGB.
-        var r: CGFloat = 0
-        var g: CGFloat = 0
-        var b: CGFloat = 0
-        var a: CGFloat = 0
-        
-        uiColor.getRed(&r, green: &g, blue: &b, alpha: &a)
-        
-        if a < alphaThreshold {
-            self = LegoColor.transClear
-        } else {
-            self = LegoColor.getApproximateColor(r: r, g: g, b: b)
-        }
-    }
-    #endif
-    
-    #if os(macOS)
-    // return an approximate color from NSColor
-    init?(nsColor: NSColor) {
-        guard let sRGBColor = nsColor.usingColorSpace(.sRGB) else { return nil }
-
-        let r = sRGBColor.redComponent
-        let g = sRGBColor.greenComponent
-        let b = sRGBColor.blueComponent
-        let a = sRGBColor.alphaComponent
-    
-        if a < alphaThreshold {
-            self = LegoColor.transClear
-        } else {
-            self = LegoColor.getApproximateColor(r: r, g: g, b: b)
-        }
-    }
-    #endif
-    
     init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat = 1) {
-        if a < alphaThreshold {
-            self = LegoColor.transClear
-        } else {
+        if alphaThreshold <= a {
             self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+        } else {
+            self = LegoColor.transClear
+        }
+    }
+    
+    init(cgColor: CGColor) {
+        if let rgba = cgColor.rgba, alphaThreshold <= rgba.a {
+            self = LegoColor.getApproximateColor(r: rgba.r, g: rgba.g, b: rgba.b)
+        } else {
+            self = LegoColor.transClear
         }
     }
     
     init(color: Color) {
-        let (r, g, b, a) = color.components
-        if a < alphaThreshold {
-            self = LegoColor.transClear
+        if let rgba = color.components, alphaThreshold <= rgba.a {
+            self = LegoColor.getApproximateColor(r: rgba.r, g: rgba.g, b: rgba.b)
         } else {
-            self = LegoColor.getApproximateColor(r: r, g: g, b: b)
+            self = LegoColor.transClear
         }
     }
-    
+
+    // return an approximate color from UIColor
+    #if os(iOS)
+    init(uiColor: UIColor) {
+        self.init(cgColor: uiColor.cgColor)
+    }
+    #elseif os(macOS)
+    init(nsColor: NSColor) {
+        self.init(cgColor: nsColor.cgColor)
+    }
+    #endif
+
     static func getApproximateColor(r: CGFloat, g: CGFloat, b: CGFloat) -> LegoColor {
         var n: Int = 0
         var diff = SolidColors[n].diff(red: r, green: g, blue: b)
