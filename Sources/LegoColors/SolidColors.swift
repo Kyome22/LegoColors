@@ -26,7 +26,6 @@ internal let SolidColors: [LegoColor] = [
     LegoColor(id: 58_, red: 0.549, green: 0.421, blue: 0.417, name: "sandRed"),
     LegoColor(id: 88_, red: 0.535, green: 0.208, blue: 0.116, name: "reddishBrown"),
     LegoColor(id: 8__, red: 0.326, green: 0.127, blue: 0.082, name: "brown"),
-    LegoColor(id: 120, red: 0.199, green: 0.000, blue: 0.000, name: "darkBrown"),
     LegoColor(id: 69_, red: 0.567, green: 0.453, blue: 0.316, name: "darkTan"),
     LegoColor(id: 2__, red: 0.871, green: 0.776, blue: 0.611, name: "tan"),
     LegoColor(id: 90_, red: 0.994, green: 0.799, blue: 0.691, name: "lightNougat"),

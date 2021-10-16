@@ -12,4 +12,8 @@ public struct RGBA {
     public let g: CGFloat
     public let b: CGFloat
     public let a: CGFloat
+    
+    public var strength: CGFloat {
+        return r + g + b
+    }
 }

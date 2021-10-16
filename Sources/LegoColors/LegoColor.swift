@@ -15,28 +15,20 @@ import UIKit
 import AppKit
 #endif
 
-private let alphaThreshold: CGFloat = 0.9
-
 public struct LegoColor: Equatable {
     public let name: String
-    public let color: Color
+    public let color: CGColor
     public let bricklinkID: Int
     
-    init(id: Int, red: Double, green: Double, blue: Double, opacity: Double = 1, name: String) {
+    init(id: Int, red: Double, green: Double, blue: Double, alpha: Double = 1, name: String) {
         self.name = name
-        self.color = Color(red: red, green: green, blue: blue, opacity: opacity)
+        self.color = CGColor(srgbRed: red, green: green, blue: blue, alpha: alpha)
         self.bricklinkID = id
     }
     
     func diff(red: CGFloat, green: CGFloat, blue: CGFloat) -> CGFloat {
-        guard let rgba = self.color.components else {
-            fatalError("Impossible")
-        }
+        guard let rgba = self.color.rgba else { fatalError("Impossible") }
         return abs(rgba.r - red) + abs(rgba.g - green) + abs(rgba.b - blue)
-    }
-    
-    public var cgColor: CGColor {
-        return self.color.cgColor ?? CGColor(gray: 0, alpha: 0)
     }
     
     public static func == (lhs: LegoColor, rhs: LegoColor) -> Bool {
@@ -63,111 +55,87 @@ public extension LegoColor {
     static let sandRed =             SolidColors[15]
     static let reddishBrown =        SolidColors[16]
     static let brown =               SolidColors[17]
-    static let darkBrown =           SolidColors[18]
-    static let darkTan =             SolidColors[19]
-    static let tan =                 SolidColors[20]
-    static let lightNougat =         SolidColors[21]
-    static let nougat =              SolidColors[22]
-    static let mediumNougat =        SolidColors[23]
-    static let darkNougat =          SolidColors[24]
-    static let mediumBrown =         SolidColors[25]
-    static let fabulandBrown =       SolidColors[26]
-    static let fabulandOrange =      SolidColors[27]
-    static let earthOrange =         SolidColors[28]
-    static let darkOrange =          SolidColors[29]
-    static let neonOrange =          SolidColors[30]
-    static let orange =              SolidColors[31]
-    static let mediumOrange =        SolidColors[32]
-    static let brightLightOrange =   SolidColors[33]
-    static let lightOrange =         SolidColors[34]
-    static let veryLightOrange =     SolidColors[35]
-    static let darkYellow =          SolidColors[36]
-    static let yellow =              SolidColors[37]
-    static let brightLightYellow =   SolidColors[38]
-    static let lightYellow =         SolidColors[39]
-    static let lightLime =           SolidColors[40]
-    static let yellowishGreen =      SolidColors[41]
-    static let neonGreen =           SolidColors[42]
-    static let mediumLime =          SolidColors[43]
-    static let lime =                SolidColors[44]
-    static let oliveGreen =          SolidColors[45]
-    static let darkGreen =           SolidColors[46]
-    static let green =               SolidColors[47]
-    static let brightGreen =         SolidColors[48]
-    static let mediumGreen =         SolidColors[49]
-    static let lightGreen =          SolidColors[50]
-    static let sandGreen =           SolidColors[51]
-    static let darkTurquoise =       SolidColors[52]
-    static let lightTurquoise =      SolidColors[53]
-    static let aqua =                SolidColors[54]
-    static let lightAqua =           SolidColors[55]
-    static let darkBlue =            SolidColors[56]
-    static let blue =                SolidColors[57]
-    static let darkAzure =           SolidColors[58]
-    static let mediumAzure =         SolidColors[59]
-    static let mediumBlue =          SolidColors[60]
-    static let maerskBlue =          SolidColors[61]
-    static let brightLightBlue =     SolidColors[62]
-    static let lightBlue =           SolidColors[63]
-    static let skyBlue =             SolidColors[64]
-    static let sandBlue =            SolidColors[65]
-    static let blueViolet =          SolidColors[66]
-    static let darkBlueViolet =      SolidColors[67]
-    static let violet =              SolidColors[68]
-    static let mediumViolet =        SolidColors[69]
-    static let lightViolet =         SolidColors[70]
-    static let darkPurple =          SolidColors[71]
-    static let purple =              SolidColors[72]
-    static let lightPurple =         SolidColors[73]
-    static let mediumLavender =      SolidColors[74]
-    static let clikitsLavender =     SolidColors[75]
-    static let lavender =            SolidColors[76]
-    static let sandPurple =          SolidColors[77]
-    static let magenta =             SolidColors[78]
-    static let darkPink =            SolidColors[79]
-    static let mediumDarkPink =      SolidColors[80]
-    static let brightPink =          SolidColors[81]
-    static let pink =                SolidColors[82]
-    static let lightPink =           SolidColors[83]
+    static let darkTan =             SolidColors[18]
+    static let tan =                 SolidColors[19]
+    static let lightNougat =         SolidColors[20]
+    static let nougat =              SolidColors[21]
+    static let mediumNougat =        SolidColors[22]
+    static let darkNougat =          SolidColors[23]
+    static let mediumBrown =         SolidColors[24]
+    static let fabulandBrown =       SolidColors[25]
+    static let fabulandOrange =      SolidColors[26]
+    static let earthOrange =         SolidColors[27]
+    static let darkOrange =          SolidColors[28]
+    static let neonOrange =          SolidColors[29]
+    static let orange =              SolidColors[30]
+    static let mediumOrange =        SolidColors[31]
+    static let brightLightOrange =   SolidColors[32]
+    static let lightOrange =         SolidColors[33]
+    static let veryLightOrange =     SolidColors[34]
+    static let darkYellow =          SolidColors[35]
+    static let yellow =              SolidColors[36]
+    static let brightLightYellow =   SolidColors[37]
+    static let lightYellow =         SolidColors[38]
+    static let lightLime =           SolidColors[39]
+    static let yellowishGreen =      SolidColors[40]
+    static let neonGreen =           SolidColors[41]
+    static let mediumLime =          SolidColors[42]
+    static let lime =                SolidColors[43]
+    static let oliveGreen =          SolidColors[44]
+    static let darkGreen =           SolidColors[45]
+    static let green =               SolidColors[46]
+    static let brightGreen =         SolidColors[47]
+    static let mediumGreen =         SolidColors[48]
+    static let lightGreen =          SolidColors[49]
+    static let sandGreen =           SolidColors[50]
+    static let darkTurquoise =       SolidColors[51]
+    static let lightTurquoise =      SolidColors[52]
+    static let aqua =                SolidColors[53]
+    static let lightAqua =           SolidColors[54]
+    static let darkBlue =            SolidColors[55]
+    static let blue =                SolidColors[56]
+    static let darkAzure =           SolidColors[57]
+    static let mediumAzure =         SolidColors[58]
+    static let mediumBlue =          SolidColors[59]
+    static let maerskBlue =          SolidColors[60]
+    static let brightLightBlue =     SolidColors[61]
+    static let lightBlue =           SolidColors[62]
+    static let skyBlue =             SolidColors[63]
+    static let sandBlue =            SolidColors[64]
+    static let blueViolet =          SolidColors[65]
+    static let darkBlueViolet =      SolidColors[66]
+    static let violet =              SolidColors[67]
+    static let mediumViolet =        SolidColors[68]
+    static let lightViolet =         SolidColors[69]
+    static let darkPurple =          SolidColors[70]
+    static let purple =              SolidColors[71]
+    static let lightPurple =         SolidColors[72]
+    static let mediumLavender =      SolidColors[73]
+    static let clikitsLavender =     SolidColors[74]
+    static let lavender =            SolidColors[75]
+    static let sandPurple =          SolidColors[76]
+    static let magenta =             SolidColors[77]
+    static let darkPink =            SolidColors[78]
+    static let mediumDarkPink =      SolidColors[79]
+    static let brightPink =          SolidColors[80]
+    static let pink =                SolidColors[81]
+    static let lightPink =           SolidColors[82]
     
-    static let transClear = LegoColor(id: 12,
-                                      red: 0.932,
-                                      green: 0.932,
-                                      blue: 0.932,
-                                      opacity: 0.3,
-                                      name: "transClear")
-    
-    init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat = 1) {
-        if alphaThreshold <= a {
-            self = LegoColor.getApproximateColor(r: r, g: g, b: b)
-        } else {
-            self = LegoColor.transClear
-        }
+    init(r: CGFloat, g: CGFloat, b: CGFloat) {
+        self = LegoColor.getApproximateColor(r: r, g: g, b: b)
     }
     
-    init(cgColor: CGColor) {
-        if let rgba = cgColor.rgba, alphaThreshold <= rgba.a {
-            self = LegoColor.getApproximateColor(r: rgba.r, g: rgba.g, b: rgba.b)
-        } else {
-            self = LegoColor.transClear
-        }
-    }
-    
-    init(color: Color) {
-        if let rgba = color.components, alphaThreshold <= rgba.a {
-            self = LegoColor.getApproximateColor(r: rgba.r, g: rgba.g, b: rgba.b)
-        } else {
-            self = LegoColor.transClear
-        }
+    init?(cgColor: CGColor) {
+        guard let rgba = cgColor.rgba else { return nil }
+        self = LegoColor.getApproximateColor(r: rgba.r, g: rgba.g, b: rgba.b)
     }
 
-    // return an approximate color from UIColor
     #if os(iOS)
-    init(uiColor: UIColor) {
+    init?(uiColor: UIColor) {
         self.init(cgColor: uiColor.cgColor)
     }
     #elseif os(macOS)
-    init(nsColor: NSColor) {
+    init?(nsColor: NSColor) {
         self.init(cgColor: nsColor.cgColor)
     }
     #endif
