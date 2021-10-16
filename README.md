@@ -1,6 +1,6 @@
 # LegoColors
 
-A library to make it easier to handle the colors of LEGO blocks with Swift.
+A library to make it easier to handle the colors of LEGO blocks with Swift.<br/>
 This library supports both iOS (14≤) and macOS (11≤).
 
 ## Usage
