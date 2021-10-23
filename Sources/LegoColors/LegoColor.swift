@@ -20,7 +20,7 @@ public struct LegoColor: Equatable {
     public let color: CGColor
     public let bricklinkID: Int
     
-    init(id: Int, red: Double, green: Double, blue: Double, alpha: Double = 1, name: String) {
+    init(id: Int, red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 1, name: String) {
         self.name = name
         self.color = CGColor(srgbRed: red, green: green, blue: blue, alpha: alpha)
         self.bricklinkID = id
